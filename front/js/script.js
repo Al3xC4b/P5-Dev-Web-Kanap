@@ -7,7 +7,6 @@ fetch ('http://localhost:3000/api/products')
     .then((jsonListProducts)=>{
         for (let jsonProduct of jsonListProducts){
             let product = new Product(jsonProduct)
-            console.log(product)
             document.querySelector("#items").innerHTML += 
                 `<a href="./product.html?id=${product._id}">
                     <article>

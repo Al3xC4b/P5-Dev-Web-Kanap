@@ -1,7 +1,56 @@
+
 function urlWithId (Url){
     const productUrl = new URL(window.location.href);
-    return 'http://localhost:3000/api/products/' + productUrl.searchParams.get("id");
+    return `http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`;
 }
+
+function parseProductForCart (productId, productQuantity, productColor){
+    return {"id" : productId, "quantity" : productQuantity, "color" : productColor}
+}
+
+function isAlreadyInCart(productAdded, productInCart){
+    if (productAdded.id == productInCart.id && productAdded.color == productInCart.color){
+        return true
+    }else{
+        return false
+    }
+}
+
+
+function addToCard(product){
+    let listProductsInCart = getProductsInCart();
+    let productAlreadyInCart = false
+    if(listProductsInCart.length === 0){
+        listProductsInCart.push(product);
+    }else{
+        for (let _product of listProductsInCart){
+            if (isAlreadyInCart(product, _product)){
+                _product.quantity += product.quantity;
+                productAlreadyInCart = true
+                break
+            }
+        }
+        if (!productAlreadyInCart){
+        listProductsInCart.push(product);
+        }        
+     }  
+    saveProductsInCart(listProductsInCart);
+}
+
+function getProductsInCart(){
+    let listProductsInCart = localStorage.getItem('listProductsInCart');
+    if (listProductsInCart === null){
+        return [];
+    }else{
+        return JSON.parse(listProductsInCart);
+    }
+}
+
+function saveProductsInCart(listProductsInCart){
+    localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
+}
+
+
     
 
 fetch(urlWithId(window.location.href))
@@ -20,6 +69,13 @@ fetch(urlWithId(window.location.href))
             document.querySelector('#colors').innerHTML +=`
             <option value="${color}">${color}</option>`
         }
+
+        document.querySelector('#addToCart').addEventListener('click', function(){
+            const productQuantity = document.querySelector('#quantity').value * 1
+            const productColor = document.querySelector('#colors').value
+            addToCard (parseProductForCart(product._id, productQuantity, productColor))
+            
+        })
+
+
     })
-
-
