@@ -7,6 +7,23 @@ function getProductsInCart(){
     }
 }
 
+function saveProductsInCart(listProductsInCart){
+    localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
+}
+
+function removeProductFromCart(itemId, itemColor){
+    let listProductsInCart = getProductsInCart()
+    index = listProductsInCart.findIndex(item => {
+        console.log(item.id)
+        console.log(itemId)
+        console.log(item.color)
+        console.log(itemColor)
+
+        item.id == itemId && item.color == itemColor
+    })
+    console.log (index)
+}
+
 class Product{
     constructor(jsonProduct){
         jsonProduct && Object.assign(this, jsonProduct);
@@ -27,7 +44,7 @@ if (listProductsInCart.length >= 1){
             .then(jsonProduct =>{
                 let _product = new Product(jsonProduct)
                 document.querySelector('#cart__items').innerHTML += 
-                    `<article class="cart__item" data-id="${_product.id}" data-color="${product.color}">
+                    `<article class="cart__item" data-id="${_product._id}" data-color="${product.color}">
                         <div class="cart__item__img">
                             <img src="${_product.imageUrl}" alt="${_product.altTxt}">
                         </div>
@@ -48,7 +65,13 @@ if (listProductsInCart.length >= 1){
                             </div>
                         </div>
                     </article>`
-
+                document.querySelectorAll(".deleteItem").forEach(item =>{
+                    item.addEventListener('click', ()=>{
+                        itemId = item.closest('article').dataset.id
+                        itemColor = item.closest('article').dataset.color
+                        removeProductFromCart(itemId, itemColor)
+                    })
+                })  
             })
     }
 }
