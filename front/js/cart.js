@@ -13,15 +13,19 @@ function saveProductsInCart(listProductsInCart){
 
 function removeProductFromCart(itemId, itemColor){
     let listProductsInCart = getProductsInCart()
-    index = listProductsInCart.findIndex(item => {
-        console.log(item.id)
-        console.log(itemId)
-        console.log(item.color)
-        console.log(itemColor)
+    let index = 0
+    for (let product of listProductsInCart){
+        if (!(product.id == itemId && product.color == itemColor)){
+            index++
+        }else{
+            break
+        }
+    }
 
-        item.id == itemId && item.color == itemColor
-    })
-    console.log (index)
+    listProductsInCart.splice(index,1)
+    console.log(listProductsInCart)
+    saveProductsInCart(listProductsInCart)
+    
 }
 
 class Product{
@@ -70,8 +74,19 @@ if (listProductsInCart.length >= 1){
                         itemId = item.closest('article').dataset.id
                         itemColor = item.closest('article').dataset.color
                         removeProductFromCart(itemId, itemColor)
+                        item.closest('article').remove()
                     })
-                })  
+                })
+
+                document.querySelectorAll('.itemQuantity').forEach(itemQuantity => {
+                    itemQuantity.addEventListener('change', e => {
+                        product.quantity = e.currentTarget.value
+                        console.log(product.quantity)
+                        console.log(listProductsInCart)
+                        saveProductsInCart(listProductsInCart)
+                    })
+                })
+
             })
     }
 }

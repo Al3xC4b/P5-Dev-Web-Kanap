@@ -73,7 +73,13 @@ fetch(urlWithId(window.location.href))
         document.querySelector('#addToCart').addEventListener('click', function(){
             const productQuantity = document.querySelector('#quantity').value * 1
             const productColor = document.querySelector('#colors').value
-            addToCard (parseProductForCart(product._id, productQuantity, productColor))
+            
+            if(productColor && productQuantity > 0){
+                addToCard (parseProductForCart(product._id, productQuantity, productColor))
+            }else{
+                alert('Veuillez renseigner un quantité et une couleur')
+            }
+            
             
         })
 
