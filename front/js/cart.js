@@ -90,3 +90,16 @@ if (listProductsInCart.length >= 1){
             })
     }
 }
+
+
+document.querySelector('form').addEventListener('submit', (e) => {
+    e.preventDefault()
+    inputFirstName = new FormData(e.currentTarget)
+    console.log(typeof inputFirstName.get("firstName"))
+    if (!/^[a-zA-Z]+$/.test(inputFirstName.get("firstName"))){
+        e.preventDefault()
+        alert("trop court")
+    }
+    
+    
+})
