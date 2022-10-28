@@ -1,3 +1,8 @@
+/**
+ * 
+ * @returns {}
+ */
+
 function getProductsInCart(){
     let listProductsInCart = localStorage.getItem('listProductsInCart');
     if (listProductsInCart === null){
@@ -11,20 +16,20 @@ function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
 }
 
+/**
+ * 
+ * @param {string} itemId 
+ * @param {string} itemColor 
+ */
 function removeProductFromCart(itemId, itemColor){
     let listProductsInCart = getProductsInCart()
-    let index = 0
-    for (let product of listProductsInCart){
-        if (!(product.id == itemId && product.color == itemColor)){
-            index++
-        }else{
-            break
-        }
-    }
+    let newList = listProductsInCart.filter(product =>
+        return !(product.id == itemId && product.color == itemColor)
+        
+    )
+    console.log(newList)
 
-    listProductsInCart.splice(index,1)
-    console.log(listProductsInCart)
-    saveProductsInCart(listProductsInCart)
+    saveProductsInCart(newList)
     
 }
 
