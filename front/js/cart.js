@@ -24,7 +24,7 @@ function saveProductsInCart(listProductsInCart){
 function removeProductFromCart(itemId, itemColor){
     let listProductsInCart = getProductsInCart()
     let newList = listProductsInCart.filter(product =>
-        return !(product.id == itemId && product.color == itemColor)
+        !(product.id == itemId && product.color == itemColor)
         
     )
     console.log(newList)
@@ -100,11 +100,30 @@ if (listProductsInCart.length >= 1){
 document.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault()
     inputFirstName = new FormData(e.currentTarget)
-    console.log(typeof inputFirstName.get("firstName"))
-    if (!/^[a-zA-Z]+$/.test(inputFirstName.get("firstName"))){
-        e.preventDefault()
-        alert("trop court")
+    const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    let isValide = false
+    for ([input,value] of inputFirstName.entries()){
+        if (value == ''){
+            document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez remplir le champs s'il vous plaît"
+            isValide = false
+            break
+        }else if (input == 'email' && !mailFormat.test(value)){
+            document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez entrer une adresse mail valide"
+            isValide = false
+            break
+        }else{
+            document.getElementById(`${input}ErrorMsg`).innerText = ""
+            isValide = true
+        }
+        
     }
+
+    if (isValide){
+
+        //récupérer le form plus les id pour faire un fetce et récupérer l'id de la commande pour le passer dans la redirection
+        
+    }
+    
     
     
 })
