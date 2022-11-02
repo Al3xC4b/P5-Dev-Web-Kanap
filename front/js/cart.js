@@ -1,3 +1,7 @@
+const script = document.createElement('script')
+script.setAttribute('src','../js/classproduct.js')
+document.querySelector('script').insertAdjacentElement("beforebegin",script)
+
 /**
  * 
  * @returns {}
@@ -32,13 +36,6 @@ function removeProductFromCart(itemId, itemColor){
     saveProductsInCart(newList)
     
 }
-
-class Product{
-    constructor(jsonProduct){
-        jsonProduct && Object.assign(this, jsonProduct);
-    }
-}
-
 
 let listProductsInCart = getProductsInCart()
 
@@ -99,10 +96,11 @@ if (listProductsInCart.length >= 1){
 
 document.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault()
-    inputFirstName = new FormData(e.currentTarget)
+    
+    inputs = new FormData(e.currentTarget)
     const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     let isValide = false
-    for ([input,value] of inputFirstName.entries()){
+    for ([input,value] of inputs.entries()){
         if (value == ''){
             document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez remplir le champs s'il vous plaît"
             isValide = false
@@ -119,11 +117,35 @@ document.querySelector('form').addEventListener('submit', (e) => {
     }
 
     if (isValide){
+        const contact = {}
+        contact.firstName = inputs.get('firstName')
+        contact.lastName = inputs.get('lastName')
+        contact.address = inputs.get('address')
+        contact.city = inputs.get('city')
+        contact.email = inputs.get('email')
 
-        //récupérer le form plus les id pour faire un fetce et récupérer l'id de la commande pour le passer dans la redirection
-        
+        const productIDInCard = []
+        for (let product of listProductsInCart){
+            productIDInCard.push(product.id)
+        }
+
+        console.log (JSON.stringify({"contact":contact, "products": productIDInCard}))
+
+        fetch (`http://localhost:3000/api/products/order`,{
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({"contact":contact, "products": productIDInCard})
+        })
+            .then(res=>{
+                if(res.ok){
+                    return res.json()
+                }
+            })
+            .then(jsonOrder=>{
+                document.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
+            })        
     }
-    
-    
-    
 })

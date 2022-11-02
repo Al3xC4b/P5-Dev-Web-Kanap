@@ -1,6 +1,10 @@
+const scriptClass = document.createElement('script')
+scriptClass.setAttribute('src','../js/classproduct.js')
+scriptClass.setAttribute('async','false')
+document.querySelector('script').insertAdjacentElement("beforebegin",scriptClass)
 
-function urlWithId (Url){
-    const productUrl = new URL(window.location.href);
+function urlWithId (url){
+    const productUrl = new URL(url);
     return `http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`;
 }
 
@@ -15,7 +19,6 @@ function isAlreadyInCart(productAdded, productInCart){
         return false
     }
 }
-
 
 function addToCard(product){
     let listProductsInCart = getProductsInCart();
@@ -50,8 +53,6 @@ function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
 }
 
-
-    
 
 fetch(urlWithId(window.location.href))
     .then(res => {

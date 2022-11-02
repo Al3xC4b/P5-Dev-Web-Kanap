@@ -1,5 +1,6 @@
 const script = document.createElement('script')
 script.setAttribute('src','../js/classproduct.js')
+script.setAttribute('async','false')
 document.querySelector('script').insertAdjacentElement("beforebegin",script)
 
 fetch ('http://localhost:3000/api/products')
