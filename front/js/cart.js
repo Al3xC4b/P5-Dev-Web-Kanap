@@ -33,12 +33,31 @@ function removeProductFromCart(itemId, itemColor){
     
 }
 
+function addQuantity (productId, productColor, productQuantity){
+    let listProductsInCart = getProductsInCart()
+    listProductsInCart.find(item => item.id==productId && item.color == productColor).quantity = productQuantity
+    saveProductsInCart(listProductsInCart)
+}
+
+/**
+ * 
+ * @param {*} listProductsInCart 
+ */
+function displayTotal (listProductsInCart){
+    let totalQuantity = 0
+    let totalPrice = 0
+
+    for (item of listProductsInCart){
+        totalPrice += item.price * item.quantity
+        totalQuantity += item.quantity
+    }
+
+    document.getElementById("totalPrice").innerText = totalPrice
+    document.getElementById("totalQuantity").innerText = totalQuantity
+}
+
+
 let listProductsInCart = getProductsInCart()
-
-console.log(listProductsInCart)
-
-let sumPrice = 0
-let sumQuantity = 0
 
 if (listProductsInCart.length >= 1){
     for (let productInCart of listProductsInCart){
@@ -77,24 +96,29 @@ if (listProductsInCart.length >= 1){
                     </article>`
                 document.querySelectorAll(".deleteItem").forEach(item =>{
                     item.addEventListener('click', ()=>{
-                        itemId = item.closest('article').dataset.id
-                        itemColor = item.closest('article').dataset.color
+                        let itemId = item.closest('article').dataset.id
+                        let itemColor = item.closest('article').dataset.color
                         removeProductFromCart(itemId, itemColor)
                         item.closest('article').remove()
+                        listProductsInCart = getProductsInCart()
+                        displayTotal(listProductsInCart)
                     })
                 })
-
                 document.querySelectorAll('.itemQuantity').forEach(itemQuantity => {
                     itemQuantity.addEventListener('change', e => {
-                        productInCart.quantity = e.currentTarget.value * 1
-                        saveProductsInCart(listProductsInCart)
+                        itemQuantityId = itemQuantity.closest('article').dataset.id
+                        itemQuantityColor = itemQuantity.closest('article').dataset.color
+                        addQuantity (itemQuantityId, itemQuantityColor, e.currentTarget.value *1 )
+                        listProductsInCart = getProductsInCart()
+                        displayTotal(listProductsInCart)
                     })
                 })
-
             })
             .catch(e => alert(e.message))
     }
 }
+
+displayTotal (listProductsInCart)
 
 
 
@@ -152,7 +176,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
                     }
                 })
                 .then(jsonOrder=>{
-                    document.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
+                   ocument.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
                 }) 
         }
 

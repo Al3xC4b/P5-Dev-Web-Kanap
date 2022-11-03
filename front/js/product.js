@@ -20,11 +20,12 @@ function urlWithId (url){
  * 
  * @param {string} productId 
  * @param {number} productQuantity 
- * @param {string} productColor 
+ * @param {string} productColor
+ * @param {number} productPrice
  * 
  */
-function parseProductForCart (productId, productQuantity, productColor){
-    return {"id" : productId, "quantity" : productQuantity, "color" : productColor}
+function parseProductForCart (productId, productQuantity, productColor, productPrice){
+    return {"id" : productId, "quantity" : productQuantity, "color" : productColor, "price": productPrice}
 }
 
 /**
@@ -111,7 +112,7 @@ fetch(urlWithId(window.location.href))
             const productColor = document.querySelector('#colors').value
             
             if(productColor && productQuantity > 0){
-                addToCard (parseProductForCart(product._id, productQuantity, productColor))
+                addToCard (parseProductForCart(product._id, productQuantity, productColor, product.price))
                 alert('Votre article a été ajouté au panier')
             }else{
                 alert('Veuillez renseigner un quantité et une couleur')
