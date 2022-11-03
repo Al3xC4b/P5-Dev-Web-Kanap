@@ -1,16 +1,38 @@
-const scriptClass = document.createElement('script')
-scriptClass.setAttribute('src','../js/classproduct.js')
-scriptClass.setAttribute('async','false')
-document.querySelector('script').insertAdjacentElement("beforebegin",scriptClass)
+class Product{
+    constructor(jsonProduct){
+        jsonProduct && Object.assign(this, jsonProduct);
+    }
+}
+
+/**
+ * 
+ * @param {string} url 
+ * @returns {string} L'url avec l'id du produit pour effectuer la requête
+ */
 
 function urlWithId (url){
     const productUrl = new URL(url);
     return `http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`;
 }
 
+
+/**
+ * 
+ * @param {string} productId 
+ * @param {number} productQuantity 
+ * @param {string} productColor 
+ * 
+ */
 function parseProductForCart (productId, productQuantity, productColor){
     return {"id" : productId, "quantity" : productQuantity, "color" : productColor}
 }
+
+/**
+ * 
+ * @param {{id: string, quantity: number, color: string}} productAdded 
+ * @param {{id: string, quantity: number, color: string}} productInCart 
+ * 
+ */
 
 function isAlreadyInCart(productAdded, productInCart){
     if (productAdded.id == productInCart.id && productAdded.color == productInCart.color){
@@ -20,15 +42,20 @@ function isAlreadyInCart(productAdded, productInCart){
     }
 }
 
+/**
+ * 
+ * @param {{id: string, quantity: number, color: string}} product 
+ */
+
 function addToCard(product){
     let listProductsInCart = getProductsInCart();
     let productAlreadyInCart = false
     if(listProductsInCart.length === 0){
         listProductsInCart.push(product);
     }else{
-        for (let _product of listProductsInCart){
-            if (isAlreadyInCart(product, _product)){
-                _product.quantity += product.quantity;
+        for (let productInCart of listProductsInCart){
+            if (isAlreadyInCart(product, productInCart)){
+                productInCart.quantity += product.quantity;
                 productAlreadyInCart = true
                 break
             }
@@ -40,6 +67,10 @@ function addToCard(product){
     saveProductsInCart(listProductsInCart);
 }
 
+/**
+ * 
+ * @returns {[] | {id: string, quantity: number, color: string}[]}
+ */
 function getProductsInCart(){
     let listProductsInCart = localStorage.getItem('listProductsInCart');
     if (listProductsInCart === null){
@@ -49,6 +80,10 @@ function getProductsInCart(){
     }
 }
 
+/**
+ * 
+ * @param {{id: string, quantity: number, color: string}[]} listProductsInCart 
+ */
 function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
 }
@@ -77,6 +112,7 @@ fetch(urlWithId(window.location.href))
             
             if(productColor && productQuantity > 0){
                 addToCard (parseProductForCart(product._id, productQuantity, productColor))
+                alert('Votre article a été ajouté au panier')
             }else{
                 alert('Veuillez renseigner un quantité et une couleur')
             }

@@ -1,11 +1,8 @@
-const script = document.createElement('script')
-script.setAttribute('src','../js/classproduct.js')
-document.querySelector('script').insertAdjacentElement("beforebegin",script)
-
-/**
- * 
- * @returns {}
- */
+class Product{
+    constructor(jsonProduct){
+        jsonProduct && Object.assign(this, jsonProduct);
+    }
+}
 
 function getProductsInCart(){
     let listProductsInCart = localStorage.getItem('listProductsInCart');
@@ -31,7 +28,6 @@ function removeProductFromCart(itemId, itemColor){
         !(product.id == itemId && product.color == itemColor)
         
     )
-    console.log(newList)
 
     saveProductsInCart(newList)
     
@@ -39,31 +35,39 @@ function removeProductFromCart(itemId, itemColor){
 
 let listProductsInCart = getProductsInCart()
 
+console.log(listProductsInCart)
+
+let sumPrice = 0
+let sumQuantity = 0
+
 if (listProductsInCart.length >= 1){
-    for (let product of listProductsInCart){
-        fetch(`http://localhost:3000/api/products/${product.id}`)
+    for (let productInCart of listProductsInCart){
+        
+        fetch(`http://localhost:3000/api/products/${productInCart.id}`)
             .then(res=>{
                 if(res.ok){
                     return res.json()
+                }else{
+                    throw new Error ('Erreur serveur')
                 }
             })
             .then(jsonProduct =>{
-                let _product = new Product(jsonProduct)
+                let product = new Product(jsonProduct)
                 document.querySelector('#cart__items').innerHTML += 
-                    `<article class="cart__item" data-id="${_product._id}" data-color="${product.color}">
+                    `<article class="cart__item" data-id="${product._id}" data-color="${productInCart.color}">
                         <div class="cart__item__img">
-                            <img src="${_product.imageUrl}" alt="${_product.altTxt}">
+                            <img src="${product.imageUrl}" alt="${product.altTxt}">
                         </div>
                         <div class="cart__item__content">
                             <div class="cart__item__content__description">
-                                <h2>${_product.name}</h2>
-                                <p>${product.color}</p>
-                                <p>${_product.price} €</p>
+                                <h2>${product.name}</h2>
+                                <p>${productInCart.color}</p>
+                                <p>${product.price} €</p>
                             </div>
                             <div class="cart__item__content__settings">
                                 <div class="cart__item__content__settings__quantity">
                                     <p>Qté : </p>
-                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productInCart.quantity}">
                                 </div>
                                 <div class="cart__item__content__settings__delete">
                                     <p class="deleteItem">Supprimer</p>
@@ -82,16 +86,17 @@ if (listProductsInCart.length >= 1){
 
                 document.querySelectorAll('.itemQuantity').forEach(itemQuantity => {
                     itemQuantity.addEventListener('change', e => {
-                        product.quantity = e.currentTarget.value
-                        console.log(product.quantity)
-                        console.log(listProductsInCart)
+                        productInCart.quantity = e.currentTarget.value * 1
                         saveProductsInCart(listProductsInCart)
                     })
                 })
 
             })
+            .catch(e => alert(e.message))
     }
 }
+
+
 
 
 document.querySelector('form').addEventListener('submit', (e) => {
@@ -129,23 +134,28 @@ document.querySelector('form').addEventListener('submit', (e) => {
             productIDInCard.push(product.id)
         }
 
-        console.log (JSON.stringify({"contact":contact, "products": productIDInCard}))
-
-        fetch (`http://localhost:3000/api/products/order`,{
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({"contact":contact, "products": productIDInCard})
-        })
-            .then(res=>{
-                if(res.ok){
-                    return res.json()
-                }
+        if (productIDInCard.length == 0){
+            alert('Veuillez ajouter au moins un article au panier')
+            
+        }else{
+            fetch (`http://localhost:3000/api/products/order`,{
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"contact":contact, "products": productIDInCard})
             })
-            .then(jsonOrder=>{
-                document.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
-            })        
+                .then(res=>{
+                    if(res.ok){
+                        return res.json()
+                    }
+                })
+                .then(jsonOrder=>{
+                    document.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
+                }) 
+        }
+
+       
     }
 })

@@ -1,7 +1,8 @@
-const script = document.createElement('script')
-script.setAttribute('src','../js/classproduct.js')
-script.setAttribute('async','false')
-document.querySelector('script').insertAdjacentElement("beforebegin",script)
+class Product{
+    constructor(jsonProduct){
+        jsonProduct && Object.assign(this, jsonProduct);
+    }
+}
 
 fetch ('http://localhost:3000/api/products')
 .then((res)=>{
