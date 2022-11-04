@@ -5,6 +5,14 @@ class Product{
 }
 
 /**
+ * @typedef {Object} productInCart
+ * @property {string} id
+ * @property {number} quantity
+ * @property {string} color
+ * @property {number} price
+ */
+
+/**
  * 
  * @param {string} url 
  * @returns {string} L'url avec l'id du produit pour effectuer la requête
@@ -30,8 +38,8 @@ function parseProductForCart (productId, productQuantity, productColor, productP
 
 /**
  * 
- * @param {{id: string, quantity: number, color: string}} productAdded 
- * @param {{id: string, quantity: number, color: string}} productInCart 
+ * @param {productInCart} productAdded 
+ * @param {productInCart} productInCart 
  * 
  */
 
@@ -45,7 +53,7 @@ function isAlreadyInCart(productAdded, productInCart){
 
 /**
  * 
- * @param {{id: string, quantity: number, color: string}} product 
+ * @param {productInCart} product 
  */
 
 function addToCard(product){
@@ -70,7 +78,7 @@ function addToCard(product){
 
 /**
  * 
- * @returns {[] | {id: string, quantity: number, color: string}[]}
+ * @returns {[] | productInCart[]}
  */
 function getProductsInCart(){
     let listProductsInCart = localStorage.getItem('listProductsInCart');
@@ -83,7 +91,7 @@ function getProductsInCart(){
 
 /**
  * 
- * @param {{id: string, quantity: number, color: string}[]} listProductsInCart 
+ * @param {productInCart[]} listProductsInCart 
  */
 function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));

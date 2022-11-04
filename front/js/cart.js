@@ -33,6 +33,13 @@ function removeProductFromCart(itemId, itemColor){
     
 }
 
+/**
+ * 
+ * @param {string} productId 
+ * @param {string} productColor 
+ * @param {number} productQuantity 
+ */
+
 function addQuantity (productId, productColor, productQuantity){
     let listProductsInCart = getProductsInCart()
     listProductsInCart.find(item => item.id==productId && item.color == productColor).quantity = productQuantity
@@ -41,13 +48,13 @@ function addQuantity (productId, productColor, productQuantity){
 
 /**
  * 
- * @param {*} listProductsInCart 
+ * @param {productInCart[]} listProductsInCart 
  */
 function displayTotal (listProductsInCart){
     let totalQuantity = 0
     let totalPrice = 0
 
-    for (item of listProductsInCart){
+    for (let item of listProductsInCart){
         totalPrice += item.price * item.quantity
         totalQuantity += item.quantity
     }
