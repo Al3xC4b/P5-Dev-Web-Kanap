@@ -16,12 +16,10 @@ class Product{
  * @param {string} url 
  * @returns {string} L'url avec l'id du produit pour effectuer la requête
  */
-
 function urlWithId (url){
     const productUrl = new URL(url);
     return `http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`;
 }
-
 
 /**
  * 
@@ -40,7 +38,6 @@ function parseProductForCart (productId, productQuantity, productColor, productP
  * @param {productInCart} productInCart 
  * 
  */
-
 function isAlreadyInCart(productAdded, productInCart){
     if (productAdded.id == productInCart.id && productAdded.color == productInCart.color){
         return true
@@ -53,7 +50,6 @@ function isAlreadyInCart(productAdded, productInCart){
  * 
  * @param {productInCart} product 
  */
-
 function addToCard(product){
     let listProductsInCart = getProductsInCart();
     let productAlreadyInCart = false
@@ -100,6 +96,8 @@ fetch(urlWithId(window.location.href))
     .then(res => {
         if (res.ok){
             return res.json();
+        }else{
+            throw new Error('Erreur serveur')
         }
     })
     .then(jsonProduct =>{
@@ -123,9 +121,6 @@ fetch(urlWithId(window.location.href))
             }else{
                 alert('Veuillez renseigner un quantité et une couleur')
             }
-            
-            
         })
-
-
     })
+    .catch(e=>alert(e.message))
