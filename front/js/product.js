@@ -9,7 +9,6 @@ class Product{
  * @property {string} id
  * @property {number} quantity
  * @property {string} color
- * @property {number} price
  */
 
 /**
@@ -29,11 +28,10 @@ function urlWithId (url){
  * @param {string} productId 
  * @param {number} productQuantity 
  * @param {string} productColor
- * @param {number} productPrice
  * 
  */
 function parseProductForCart (productId, productQuantity, productColor, productPrice){
-    return {"id" : productId, "quantity" : productQuantity, "color" : productColor, "price": productPrice}
+    return {"id" : productId, "quantity" : productQuantity, "color" : productColor}
 }
 
 /**
@@ -120,7 +118,7 @@ fetch(urlWithId(window.location.href))
             const productColor = document.querySelector('#colors').value
             
             if(productColor && productQuantity > 0){
-                addToCard (parseProductForCart(product._id, productQuantity, productColor, product.price))
+                addToCard (parseProductForCart(product._id, productQuantity, productColor))
                 alert('Votre article a été ajouté au panier')
             }else{
                 alert('Veuillez renseigner un quantité et une couleur')

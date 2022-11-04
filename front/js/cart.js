@@ -50,17 +50,29 @@ function addQuantity (productId, productColor, productQuantity){
  * 
  * @param {productInCart[]} listProductsInCart 
  */
-function displayTotal (listProductsInCart){
-    let totalQuantity = 0
-    let totalPrice = 0
-
-    for (let item of listProductsInCart){
-        totalPrice += item.price * item.quantity
-        totalQuantity += item.quantity
+function displayTotal(listProductsInCart){
+    if (listProductsInCart.length >= 1){
+        let total = {"quantity":0, "price":0}
+        for (let productInCart of listProductsInCart){
+            
+            fetch(`http://localhost:3000/api/products/${productInCart.id}`)
+                .then(res=>{
+                    if(res.ok){
+                        return res.json()
+                    }else{
+                        throw new Error ('Erreur serveur')
+                    }
+                })
+                .then(jsonProduct =>{
+                    let product = new Product(jsonProduct)
+                    total.quantity += productInCart.quantity
+                    total.price += productInCart.quantity * product.price
+                    document.getElementById("totalPrice").innerText = total.price
+                    document.getElementById("totalQuantity").innerText = total.quantity
+                })                
+        }
     }
-
-    document.getElementById("totalPrice").innerText = totalPrice
-    document.getElementById("totalQuantity").innerText = totalQuantity
+        
 }
 
 
@@ -68,6 +80,7 @@ let listProductsInCart = getProductsInCart()
 
 if (listProductsInCart.length >= 1){
     for (let productInCart of listProductsInCart){
+        
         
         fetch(`http://localhost:3000/api/products/${productInCart.id}`)
             .then(res=>{
