@@ -92,11 +92,18 @@ function deleteItem(){
 function changeQuantity(){
     document.querySelectorAll('.itemQuantity').forEach(itemQuantity => {
         itemQuantity.addEventListener('change', e => {
-            let itemQuantityId = itemQuantity.closest('article').dataset.id
-            let itemQuantityColor = itemQuantity.closest('article').dataset.color
-            addQuantity (itemQuantityId, itemQuantityColor, e.currentTarget.value *1 )
-            listProductsInCart = getProductsInCart()
-            displayTotal(listProductsInCart)
+            if (e.currentTarget.value <= 0 || e.currentTarget.value >100){
+                alert ('Veuillez saisir une quantité entre 1 et 100')
+                document.querySelector('#cart__items').innerHTML =''
+                displayProductInCart(listProductsInCart)
+            }else{
+                let itemQuantityId = itemQuantity.closest('article').dataset.id
+                let itemQuantityColor = itemQuantity.closest('article').dataset.color
+                addQuantity (itemQuantityId, itemQuantityColor, e.currentTarget.value *1 )
+                listProductsInCart = getProductsInCart()
+                displayTotal(listProductsInCart)
+            }
+            
         })
     })
 }
@@ -162,6 +169,10 @@ document.querySelector('form').addEventListener('submit', (e) => {
             document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez remplir le champs s'il vous plaît"
             isValide = false
             break
+        }else if ((input == 'firstName' || input =='lastName') && !/^[a-zA-Z]+$/.test(value)){
+            document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez ne saisir que des lettres"
+            isValide = false
+            break
         }else if (input == 'email' && !mailFormat.test(value)){
             document.getElementById(`${input}ErrorMsg`).innerText = "Veuillez entrer une adresse mail valide"
             isValide = false
@@ -204,6 +215,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
                 })
                 .then(jsonOrder=>{
                    document.location.href=`http://127.0.0.1:5500/front/html/confirmation.html?orderId=${jsonOrder.orderId}`
+                   localStorage.clear()
                 }) 
                 .catch(e => alert(e.message))
         }

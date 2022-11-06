@@ -13,27 +13,6 @@ class Product{
 
 /**
  * 
- * @param {string} url 
- * @returns {string} L'url avec l'id du produit pour effectuer la requête
- */
-function urlWithId (url){
-    const productUrl = new URL(url);
-    return `http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`;
-}
-
-/**
- * 
- * @param {string} productId 
- * @param {number} productQuantity 
- * @param {string} productColor
- * 
- */
-function parseProductForCart (productId, productQuantity, productColor, productPrice){
-    return {"id" : productId, "quantity" : productQuantity, "color" : productColor}
-}
-
-/**
- * 
  * @param {productInCart} productAdded 
  * @param {productInCart} productInCart 
  * 
@@ -91,8 +70,9 @@ function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
 }
 
+const productUrl = new URL(window.location.href);
 
-fetch(urlWithId(window.location.href))
+fetch(`http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`)
     .then(res => {
         if (res.ok){
             return res.json();
@@ -115,11 +95,11 @@ fetch(urlWithId(window.location.href))
             const productQuantity = document.querySelector('#quantity').value * 1
             const productColor = document.querySelector('#colors').value
             
-            if(productColor && productQuantity > 0){
-                addToCard (parseProductForCart(product._id, productQuantity, productColor))
+            if(productColor && productQuantity > 0 && productQuantity <= 100){
+                addToCard ({"id" : product._id, "quantity" : productQuantity, "color" : productColor})
                 alert('Votre article a été ajouté au panier')
             }else{
-                alert('Veuillez renseigner un quantité et une couleur')
+                alert('Veuillez renseigner un quantité entre 1 et 100 et une couleur')
             }
         })
     })
