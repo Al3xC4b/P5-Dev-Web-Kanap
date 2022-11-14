@@ -5,6 +5,7 @@ class Product{
 }
 
 /**
+ * 
  * @typedef {Object} productInCart
  * @property {string} id
  * @property {number} quantity
@@ -12,10 +13,10 @@ class Product{
  */
 
 /**
+ * Cherche si le produit est déjà présent dans le panier ou non
  * 
  * @param {productInCart} productAdded 
  * @param {productInCart} productInCart 
- * 
  */
 function isAlreadyInCart(productAdded, productInCart){
     if (productAdded.id == productInCart.id && productAdded.color == productInCart.color){
@@ -26,6 +27,7 @@ function isAlreadyInCart(productAdded, productInCart){
 }
 
 /**
+ * Ajoute le produit au panier
  * 
  * @param {productInCart} product 
  */
@@ -50,6 +52,7 @@ function addToCard(product){
 }
 
 /**
+ * Récupère les produits déjà présent dans le panier
  * 
  * @returns {[] | productInCart[]}
  */
@@ -63,12 +66,15 @@ function getProductsInCart(){
 }
 
 /**
+ * Enregistre les produits du panier dans le local storage
  * 
  * @param {productInCart[]} listProductsInCart 
  */
 function saveProductsInCart(listProductsInCart){
     localStorage.setItem('listProductsInCart', JSON.stringify(listProductsInCart));
 }
+
+/*Affichage du produit*/
 
 const productUrl = new URL(window.location.href);
 

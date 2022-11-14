@@ -18,6 +18,7 @@ function saveProductsInCart(listProductsInCart){
 }
 
 /**
+ * Supprime un produit du panier correspondant à l'id et la couleur données
  * 
  * @param {string} itemId 
  * @param {string} itemColor 
@@ -43,6 +44,7 @@ function addQuantity (productId, productColor, productQuantity){
     saveProductsInCart(listProductsInCart)
 }
 /**
+ * Affiche les totaux (quantité et prix) des produits présents dans la panier
  * 
  * @param {productInCart[]} listProductsInCart 
  */
@@ -110,6 +112,7 @@ function changeQuantity(){
 
 
 /**
+ * Affiche dans la page les produits présent dans le panier
  * 
  * @param {productInCart[]} listProductsInCart 
  */
@@ -158,6 +161,8 @@ async function displayProductInCart(listProductsInCart){
 let listProductsInCart = getProductsInCart()
 displayProductInCart(listProductsInCart)
 displayTotal (listProductsInCart)
+
+/*Validation du formulaire*/
 
 document.querySelector('form').addEventListener('submit', (e) => {
     e.preventDefault()
