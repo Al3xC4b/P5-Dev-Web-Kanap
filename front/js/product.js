@@ -105,7 +105,7 @@ fetch(`http://localhost:3000/api/products/${productUrl.searchParams.get("id")}`)
                 addToCard ({"id" : product._id, "quantity" : productQuantity, "color" : productColor})
                 alert('Votre article a été ajouté au panier')
             }else{
-                alert('Veuillez renseigner un quantité entre 1 et 100 et une couleur')
+                alert('Veuillez renseigner une quantité entre 1 et 100 et une couleur')
             }
         })
     })

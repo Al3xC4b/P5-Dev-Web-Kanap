@@ -30,11 +30,3 @@ fetch ('http://localhost:3000/api/products')
 .catch(e=>{
     document.querySelector("#items").innerHTML = e.message
 })
-
-
-//Clear local storage à la commande
-//Qté < 100
-//Nom et prénom pas de chiffres
-//Qté négative dans panier
-//Ajouter description fonction
-//Détailler plan de test
